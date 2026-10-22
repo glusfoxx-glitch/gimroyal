@@ -1,58 +1,79 @@
-export default function GameCard({ card, onClick }) {
-  if (!card) return null;
+import { CARDS } from '@shared/cards.js';
+
+export default function CardFace({ card, id, size = "normal", dim, progress, selected, lifted }) {
+  // Récupère les données de la carte soit par l'objet `card`, soit par l'ID
+  const cardData = card || CARDS[id] || { id: id, name: id, cost: "?", stats: {} };
 
   let sizeClass = "w-36 h-52";
-  if (card.stats?.mass >= 6) sizeClass = "w-44 h-60 border-yellow-500 scale-105";
-  if (card.stats?.mass <= 2) sizeClass = "w-28 h-40 scale-95";
+  if (cardData.stats?.mass >= 6) sizeClass = "w-44 h-60 border-yellow-500 scale-105";
+  if (cardData.stats?.mass <= 2) sizeClass = "w-28 h-40 scale-95";
 
-  const getImageSource = (id) => {
-    const images = {
-      theo: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=300",
-      vladimir: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=300",
-      nolan: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=300",
-      matheo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&q=80&w=300",
-      mohammed: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=300",
-      adam: "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&q=80&w=300",
-      ibrahima: "https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?auto=format&fit=crop&q=80&w=300",
-      yann: "https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?auto=format&fit=crop&q=80&w=300",
-      clement: "https://images.unsplash.com/photo-1500048993953-d23a436266cf?auto=format&fit=crop&q=80&w=300",
-      aisha: "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?auto=format&fit=crop&q=80&w=300",
-      celine: "https://images.unsplash.com/photo-1567532939604-b6b5b0db2604?auto=format&fit=crop&q=80&w=300",
-      emircan: "https://images.unsplash.com/photo-1501196354995-cbb51c65aaea?auto=format&fit=crop&q=80&w=300",
-      pasparfait: "https://images.unsplash.com/photo-1542909168-82c3e7fdca5c?auto=format&fit=crop&q=80&w=300",
-      alycia: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=300",
-      aminematue: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&q=80&w=300",
-      beti: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=300",
-      bureau: "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=300",
-      poliakov: "https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&q=80&w=300",
-      brioche: "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&q=80&w=300"
+  if (size === "xs" || size === "sm") {
+    sizeClass = "w-20 h-28 text-xs";
+  } else if (size === "lg") {
+    sizeClass = "w-48 h-64";
+  }
+
+  // Association directe avec de superbes artworks officiels Clash Royale selon l'ID
+  const getOfficialArtwork = (cardId) => {
+    const artworks = {
+      theo: "https://api-assets.clashroyale.com/cards/300/mega-knight.png", // Tank costaud
+      vladimir: "https://api-assets.clashroyale.com/cards/300/lumberjack.png", // Rusher rapide
+      nolan: "https://api-assets.clashroyale.com/cards/300/magic-archer.png", // Sniper à distance
+      matheo: "https://api-assets.clashroyale.com/cards/300/monk.png", // Soutien / Corps à corps
+      mohammed: "https://api-assets.clashroyale.com/cards/300/electro-giant.png", // Colosse massif
+      adam: "https://api-assets.clashroyale.com/cards/300/bandit.png", // Fonceur / Assassin
+      ibrahima: "https://api-assets.clashroyale.com/cards/300/pekka.png", // Chevalier géant en armure
+      yann: "https://api-assets.clashroyale.com/cards/300/royal-ghost.png", // Fantôme invisible
+      clement: "https://api-assets.clashroyale.com/cards/300/fisherman.png", // Électrocuteur / Pêcheur
+      aisha: "https://api-assets.clashroyale.com/cards/300/mega-minion.png", // Unité volante
+      celine: "https://api-assets.clashroyale.com/cards/300/hunter.png", // Stratège
+      emircan: "https://api-assets.clashroyale.com/cards/300/valkyrie.png", // Combattant
+      pasparfait: "https://api-assets.clashroyale.com/cards/300/musketeer.png", // Canonnier
+      alycia: "https://api-assets.clashroyale.com/cards/300/ice-spirit.png", // Supportrice rapide
+      aminematue: "https://api-assets.clashroyale.com/cards/300/goblins.png", // Sapeur gobelin
+      beti: "https://api-assets.clashroyale.com/cards/300/elixir-collector.png", // Bâtiment
+      bureau: "https://api-assets.clashroyale.com/cards/300/inferno-tower.png", // Tour de l'enfer
+      poliakov: "https://api-assets.clashroyale.com/cards/300/rage.png", // Sort de rage
+      brioche: "https://api-assets.clashroyale.com/cards/300/heal-spirit.png" // Sort de soin
     };
-    return images[id] || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=300";
+    return artworks[cardId] || "https://api-assets.clashroyale.com/cards/300/knight.png";
   };
 
   return (
-    <div 
-      onClick={onClick}
-      className={`relative ${sizeClass} rounded-2xl border-2 border-gray-800 shadow-2xl overflow-hidden cursor-pointer transform hover:scale-105 hover:-translate-y-1 transition-all duration-200 bg-gray-900`}
-    >
+    <div className={`relative ${sizeClass} rounded-2xl border-2 border-gray-800 shadow-2xl overflow-hidden cursor-pointer bg-gray-900 select-none transition-transform duration-150 ${selected ? 'ring-4 ring-purple-500 -translate-y-2' : ''} ${lifted ? 'opacity-40' : ''}`}>
+      
+      {/* L'image officielle de la carte */}
       <img 
-        src={getImageSource(card.id)} 
-        alt={card.name} 
+        src={getOfficialArtwork(cardData.id)} 
+        alt={cardData.name} 
         className="absolute inset-0 w-full h-full object-cover object-center"
       />
       
-      <div className="absolute top-2 left-2 bg-purple-600 border-2 border-black text-white font-extrabold rounded-full w-9 h-9 flex items-center justify-center shadow-lg text-sm z-10">
-        {card.cost}
-      </div>
+      {/* Ombre portée pour la lisibilité */}
+      <div className="absolute inset-0 bg-black/20 pointer-events-none" />
 
-      <div className="absolute bottom-0 w-full bg-gradient-to-t from-black via-black/90 to-transparent pt-12 pb-3 px-2 text-white text-center z-10">
-        <h3 className="font-black text-sm uppercase tracking-wide drop-shadow-md">
-          {card.name}
+      {/* Coût d'élixir */}
+      {cardData.cost !== undefined && (
+        <div className="absolute top-2 left-2 bg-purple-600 border-2 border-black text-white font-extrabold rounded-full w-8 h-8 flex items-center justify-center shadow-lg text-xs z-10">
+          {cardData.cost}
+        </div>
+      )}
+
+      {/* Barre de progression si pas assez d'élixir */}
+      {dim && (
+        <div className="absolute inset-0 bg-black/60 backdrop-blur-[1px] z-20 pointer-events-none" />
+      )}
+
+      {/* Nom et Stats en bas */}
+      <div className="absolute bottom-0 w-full bg-gradient-to-t from-black via-black/90 to-transparent pt-10 pb-2 px-2 text-white text-center z-30">
+        <h3 className="font-black text-xs uppercase tracking-wide drop-shadow-[0_2px_2px_rgba(0,0,0,0.9)] truncate">
+          {cardData.name}
         </h3>
-        {card.stats?.hp && (
-          <div className="flex justify-around items-center text-xs mt-2 font-bold bg-black/50 rounded-lg py-1 px-1 border border-white/10">
-            <span className="text-red-400">❤️ {card.stats.hp}</span>
-            {card.stats.damage && <span className="text-orange-400">⚔️ {card.stats.damage}</span>}
+        {cardData.stats?.hp && size !== "xs" && (
+          <div className="flex justify-around items-center text-[10px] mt-1 font-bold bg-black/60 rounded py-0.5 px-1 border border-white/10">
+            <span className="text-red-400">❤️ {cardData.stats.hp}</span>
+            {cardData.stats?.damage && <span className="text-orange-400">⚔️ {cardData.stats.damage}</span>}
           </div>
         )}
       </div>
