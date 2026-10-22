@@ -1,0 +1,32 @@
+{
+  "name": "gim-royal",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "GIM Royal — clone de Clash Royale 3D multijoueur jouable dans le navigateur (Le Couloir du Lycée).",
+  "engines": {
+    "node": ">=20.9.0"
+  },
+  "scripts": {
+    "dev": "node scripts/dev.mjs",
+    "dev:web": "next dev",
+    "dev:server": "node --watch server/index.js",
+    "build": "next build",
+    "start": "next start",
+    "start:server": "node server/index.js",
+    "test:sim": "node server/test/simulate.js",
+    "test:auth": "node server/test/auth.test.js",
+    "test:mechanics": "node server/test/mechanics.test.js",
+    "test": "node server/test/mechanics.test.js && node server/test/auth.test.js && node server/test/matchmaking.test.js && node server/test/simulate.js",
+    "test:matchmaking": "node server/test/matchmaking.test.js"
+  },
+  "dependencies": {
+    "@react-three/fiber": "^9.1.0",
+    "next": "^16.0.7",
+    "react": "^19.2.1",
+    "react-dom": "^19.2.1",
+    "socket.io": "^4.8.1",
+    "socket.io-client": "^4.8.1",
+    "three": "^0.180.0"
+  }
+}

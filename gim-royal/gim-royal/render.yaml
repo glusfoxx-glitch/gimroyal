@@ -1,0 +1,20 @@
+# Blueprint Render pour le serveur de jeu (Dashboard Render > New > Blueprint > ce dépôt)
+services:
+  - type: web
+    name: gim-royal-server
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm run start:server
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: JWT_SECRET
+        generateValue: true
+      - key: CLIENT_ORIGIN
+        value: "*"
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false
