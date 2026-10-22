@@ -29,41 +29,35 @@ export default function CardFace({ card, id, size, dim, selected, lifted }) {
   };
 
   return (
-    <div className={`relative w-full h-full min-h-[110px] rounded-xl border border-purple-500/40 shadow-lg overflow-hidden cursor-pointer bg-gray-900 select-none flex flex-col justify-between transition-transform ${selected ? 'ring-2 ring-purple-400 scale-105' : ''} ${lifted ? 'opacity-40' : ''}`}>
+    <div className={`relative w-full h-full min-h-[100px] rounded-xl border border-purple-500/50 shadow-md overflow-hidden cursor-pointer bg-gray-900 select-none flex flex-col justify-between transition-transform ${selected ? 'ring-2 ring-purple-400 scale-105' : ''} ${lifted ? 'opacity-40' : ''}`}>
       
-      {/* Image de fond de la carte */}
+      {/* Illustration officielle en fond */}
       <div className="absolute inset-0 z-0">
         <img 
           src={getOfficialArtwork(cardData.id)} 
           alt={cardData.name} 
-          className="w-full h-full object-cover object-center opacity-80"
+          className="w-full h-full object-cover object-center"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-black/20" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-black/10" />
       </div>
 
-      {/* En-tête : Coût en élixir */}
-      <div className="relative z-10 flex justify-between items-start p-1.5">
+      {/* Coût en élixir en haut à gauche */}
+      <div className="relative z-10 p-1">
         {cardData.cost !== undefined && (
-          <span className="bg-purple-600 text-white font-extrabold text-[10px] px-1.5 py-0.5 rounded-full border border-black shadow">
+          <span className="bg-purple-600 text-white font-black text-[10px] w-5 h-5 rounded-full flex items-center justify-center border border-black shadow">
             {cardData.cost}
           </span>
         )}
       </div>
 
-      {/* Masque assombrissant si non disponible */}
+      {/* Voile sombre si la carte n'est pas jouable */}
       {dim && <div className="absolute inset-0 bg-black/60 z-20 pointer-events-none" />}
 
-      {/* Informations en bas : Nom et stats */}
-      <div className="relative z-10 p-1.5 bg-black/80 backdrop-blur-xs text-center border-t border-white/10">
-        <h3 className="font-bold text-[11px] text-white uppercase tracking-tight truncate">
+      {/* Nom unique de la carte en bas */}
+      <div className="relative z-10 p-1 text-center bg-black/70 backdrop-blur-xs border-t border-white/10">
+        <h3 className="font-extrabold text-[10px] text-white uppercase tracking-tight truncate">
           {cardData.name}
         </h3>
-        {cardData.stats?.hp && size !== "xs" && (
-          <div className="flex justify-center gap-1 text-[9px] font-semibold mt-0.5 text-gray-300">
-            <span className="text-red-400">❤️ {cardData.stats.hp}</span>
-            {cardData.stats?.damage && <span className="text-orange-400">⚔️ {cardData.stats.damage}</span>}
-          </div>
-        )}
       </div>
     </div>
   );
